@@ -1,14 +1,16 @@
-package llui;
+package stratumkit.llui;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class Graphics {
+    private final RequestGenerator requestGenerator;
 
-    public Graphics() {
+    public Graphics(RequestGenerator requestGenerator) {
+        this.requestGenerator = requestGenerator;
     }
 
-    public void drawLine(RequestGenerator req, int sx, int sy, int ex, int ey, int r, int g, int b) {
+    public void drawLine(int sx, int sy, int ex, int ey, int r, int g, int b) {
         byte[] arr = {
                 (byte) 16,
                 (byte) sx,
@@ -17,10 +19,10 @@ public class Graphics {
                 (byte) ey,
                 (byte) r, (byte) g, (byte) b
         };
-        req.addByteArrayToRequest(arr);
+        requestGenerator.addByteArrayToRequest(arr);
     }
 
-    public void fillEllipse(RequestGenerator req, int x, int y, int width, int height, int r, int g, int b) {
+    public void fillEllipse(int x, int y, int width, int height, int r, int g, int b) {
         byte[] arr = {
                 (byte) 17,
                 (byte) x,
@@ -29,10 +31,10 @@ public class Graphics {
                 (byte) height,
                 (byte) r, (byte) g, (byte) b
         };
-        req.addByteArrayToRequest(arr);
+        requestGenerator.addByteArrayToRequest(arr);
     }
 
-    public void fillRect(RequestGenerator req, int x, int y, int width, int height, int r, int g, int b) {
+    public void fillRect(int x, int y, int width, int height, int r, int g, int b) {
         byte[] arr = {
                 (byte) 18,
                 (byte) x,
@@ -41,10 +43,10 @@ public class Graphics {
                 (byte) height,
                 (byte) r, (byte) g, (byte) b
         };
-        req.addByteArrayToRequest(arr);
+        requestGenerator.addByteArrayToRequest(arr);
     }
 
-    public void drawQuadratic(RequestGenerator req, int sx, int sy, int cx, int cy, int ex, int ey, int r, int g, int b) {
+    public void drawQuadratic(int sx, int sy, int cx, int cy, int ex, int ey, int r, int g, int b) {
         byte[] arr = {
                 (byte) 18,
                 (byte) sx,
@@ -55,10 +57,10 @@ public class Graphics {
                 (byte) ey,
                 (byte) r, (byte) g, (byte) b
         };
-        req.addByteArrayToRequest(arr);
+        requestGenerator.addByteArrayToRequest(arr);
     }
 
-    public void drawPolygon(RequestGenerator req, int[] xs, int[] ys, int r, int g, int b) {
+    public void drawPolygon(int[] xs, int[] ys, int r, int g, int b) {
         byte[] array = new byte[2 * xs.length + 5];
         array[0] = (byte) 23;
         array[1] = (byte) xs.length;
@@ -70,10 +72,10 @@ public class Graphics {
         array[array.length - 2] = (byte) g;
         array[array.length - 1] = (byte) b;
 
-        req.addByteArrayToRequest(array);
+        requestGenerator.addByteArrayToRequest(array);
     }
 
-    public void drawText(RequestGenerator req, int x, int y, String text, int r, int g, int b) {
+    public void drawText(int x, int y, String text, int r, int g, int b) {
         byte[] arr1 = {
                 (byte) 30,
                 (byte) x,
@@ -89,10 +91,10 @@ public class Graphics {
                 concatenateTwoArrays(
                         arr1, text.getBytes(StandardCharsets.UTF_8)),
                 arr2);
-        req.addByteArrayToRequest(array);
+        requestGenerator.addByteArrayToRequest(array);
     }
 
-    public void drawIcon(RequestGenerator req, int x, int y, int iconNo, int r, int g, int b) {
+    public void drawIcon(int x, int y, int iconNo, int r, int g, int b) {
         byte[] arr = {
                 (byte) 22,
                 (byte) x,
@@ -100,7 +102,7 @@ public class Graphics {
                 (byte) iconNo,
                 (byte) r, (byte) g, (byte) b
         };
-        req.addByteArrayToRequest(arr);
+        requestGenerator.addByteArrayToRequest(arr);
     }
 
     public byte[] concatenateTwoArrays(byte[] array1, byte[] array2) {

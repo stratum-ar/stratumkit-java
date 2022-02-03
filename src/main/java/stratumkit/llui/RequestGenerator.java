@@ -1,4 +1,4 @@
-package llui;
+package stratumkit.llui;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -48,6 +48,10 @@ public class RequestGenerator {
 
     public byte[] getRequest() {
         return request;
+    }
+
+    public Graphics getGraphics() {
+        return new Graphics(this);
     }
 
 }
