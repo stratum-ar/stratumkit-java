@@ -1,5 +1,9 @@
 package stratumkit.llui;
 
+import stratumkit.ui.enums.Alignment;
+import stratumkit.ui.enums.ButtonState;
+import stratumkit.ui.enums.EditBoxState;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -105,7 +109,145 @@ public class Graphics {
         requestGenerator.addByteArrayToRequest(arr);
     }
 
-    public byte[] concatenateTwoArrays(byte[] array1, byte[] array2) {
+    public void drawAlignedText(int x, int y, int width, int height, Alignment alignment,
+                                String text, int r, int g, int b){
+        byte [] arr1 = {
+                (byte) 32,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) alignment.ordinal(),
+                (byte) text.length(),
+        };
+        byte[] arr2 = {
+                (byte) r,
+                (byte) g,
+                (byte) b
+        };
+
+        byte[] array = concatenateTwoArrays(
+                concatenateTwoArrays(
+                        arr1, text.getBytes(StandardCharsets.UTF_8)),
+                arr2);
+        requestGenerator.addByteArrayToRequest(array);
+    }
+
+    public void drawButton(int x, int y, int width, int height, ButtonState buttonState, String text,
+                           int ix, int iy, int iconNo, int ir, int ig, int ib) {
+        byte [] arr1 = {
+                (byte) 33,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) buttonState.ordinal(),
+                (byte) text.length()
+        };
+        byte[] arr2 = {
+                (byte) ix,
+                (byte) iy,
+                (byte) iconNo,
+                (byte) ir, (byte) ig, (byte) ib
+        };
+        byte[] array = concatenateTwoArrays(
+                concatenateTwoArrays(
+                        arr1, text.getBytes(StandardCharsets.UTF_8)),
+                arr2);
+        requestGenerator.addByteArrayToRequest(array);
+    }
+
+
+    public void drawComboBox(int x, int y, int width, int height, ButtonState buttonState, String text) {
+        byte [] arr1 = {
+                (byte) 34,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) buttonState.ordinal(),
+                (byte) text.length()
+        };
+        byte [] array = concatenateTwoArrays(arr1, text.getBytes(StandardCharsets.UTF_8));
+        requestGenerator.addByteArrayToRequest(array);
+    }
+
+    public void drawCheckBox(int x, int y, int width, int height, boolean isChecked) {
+        byte[] arr = {
+                (byte) 35,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) (isChecked ? 1 : 0)
+        };
+
+        requestGenerator.addByteArrayToRequest(arr);
+    }
+
+    public void drawSlider(int x, int y, int width, int height, double fillPercentage, boolean vertical) {
+        byte[] arr = {
+                (byte) 37,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) (fillPercentage * 255.0),
+                (byte) (vertical ? 1 : 0)
+        };
+
+        requestGenerator.addByteArrayToRequest(arr);
+    }
+
+    public void drawProgress (int x, int y, int width, int height, double progress) {
+        byte[] arr = {
+                (byte) 38,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) (progress * 255.0)
+        };
+
+        requestGenerator.addByteArrayToRequest(arr);
+    }
+
+    // TODO: FIX
+    public void drawEditBox(int x, int y, int width, int height, EditBoxState editBoxState, String text, int isSelected ) {
+        byte [] arr1 = {
+                (byte) 39,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) editBoxState.ordinal(),
+                (byte) text.length()
+        };
+        byte [] arr2 = {
+                (byte) isSelected
+        };
+
+        byte [] array = concatenateTwoArrays(concatenateTwoArrays(arr1, text.getBytes(StandardCharsets.UTF_8)),
+                arr2);
+
+        requestGenerator.addByteArrayToRequest(array);
+    }
+
+    public void drawPager(int x, int y, int width, int height, int noOfItems, int selectedIndex, boolean vertical) {
+        byte[] arr = {
+                (byte) 43,
+                (byte) x,
+                (byte) y,
+                (byte) width,
+                (byte) height,
+                (byte) noOfItems,
+                (byte) selectedIndex,
+                (byte) (vertical ? 0 : 1)
+        };
+        requestGenerator.addByteArrayToRequest(arr);
+    }
+
+    byte[] concatenateTwoArrays(byte[] array1, byte[] array2) {
         byte[] result = Arrays.copyOf(array1, array1.length + array2.length);
         System.arraycopy(array2, 0, result, array1.length, array2.length);
         array2 = Arrays.copyOf(result, result.length);
